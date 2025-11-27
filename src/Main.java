@@ -1,8 +1,7 @@
-import java.util.Scanner;
+import  java.util.Scanner;
 
 public class Main {
 
-//    import  java.util.Scanner;
     public static void main(String[] args) {                  // [5] main 메서드 실행 시작
         //  Article 객체가 생성될 때마다 생성자 호출 → id 출력
 //        System.out.println(new Article().id); // 1
@@ -17,12 +16,12 @@ public class Main {
 //        System.out.println(new Article().id); // 10
         // Article 객체를 배열에 담기 위해 10칸짜리 배열 생성, 초기값은 모두 null
 
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("배열 수 입력");
-//        int i = scanner.nextInt();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("배열 수 입력");
+        int aa = scanner.nextInt();
 
 
-        Article[] articles = new Article[10];
+        Article[] articles = new Article[aa];
 
         System.out.println("-----------------");
         System.out.println("일반 for 문");
@@ -44,6 +43,7 @@ public class Main {
 }
 
 class Article {
+
     // [1] static 변수 → 모든 Article 객체가 공유하는 ID 관리용
     static int lastId;
 
