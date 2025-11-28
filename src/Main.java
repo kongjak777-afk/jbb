@@ -1,68 +1,98 @@
-import  java.util.Scanner;
+import java.util.ArrayList;
 
-public class Main {
-
-    public static void main(String[] args) {                  // [5] main 메서드 실행 시작
-        //  Article 객체가 생성될 때마다 생성자 호출 → id 출력
-//        System.out.println(new Article().id); // 1
-//        System.out.println(new Article().id); // 2
-//        System.out.println(new Article().id); // 3
-//        System.out.println(new Article().id); // 4
-//        System.out.println(new Article().id); // 5
-//        System.out.println(new Article().id); // 6
-//        System.out.println(new Article().id); // 7
-//        System.out.println(new Article().id); // 8
-//        System.out.println(new Article().id); // 9
-//        System.out.println(new Article().id); // 10
-        // Article 객체를 배열에 담기 위해 10칸짜리 배열 생성, 초기값은 모두 null
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("배열 수 입력");
-        int aa = scanner.nextInt();
+class Main {
+    public static void main(String[] args) {
+//        exam01();
+//        exam02();
+        exam03();
+    }
 
 
-        Article[] articles = new Article[aa];
+    static void exam01()  {   //articleLength 변수 생성, for문을 이용해서 NPE 회피 --> 리모델링 필요
+        int articleLength = 0 ;
+        Article[] articles = new Article[10];
 
-        System.out.println("-----------------");
-        System.out.println("일반 for 문");
+        articles[0] = new Article();
+        articleLength++;
+        articles[1] = new Article();
+        articleLength++;
+        articles[2] = new Article();
+        articleLength++;
+        articles[3] = new Article();
+        articleLength++;
+        articles[4] = new Article();
+        articleLength++;
+        articles[5] = new Article();
+        articleLength++;
 
-        // [7] 일반 for문: 배열의 각 칸에 Article 객체 생성 + ID 출력
-        for (int i = 0; i < articles.length; i++) {
-            articles[i] = new Article();                  // [8] Article 생성자 호출
-            System.out.println(articles[i].id);          // [11] 생성된 객체의 ID 출력
-        }
-
-        System.out.println("------------------");
-        System.out.println("향상된 for 문으로");
-
-        // [12] 향상된 for문: 배열 안의 각 Article 객체 순회하며 ID 출력
-        for (Article art : articles) {
-            System.out.println(art.id);              // [13] 각 객체의 ID 출력
+        for(int i = 0 ; i < articleLength; i++ ) {
+            Article article = articles[i];
+            System.out.println(article.id);
         }
     }
+    static void exam02() {
+        ArrayList articles = new ArrayList();   //ArrayList
+//        articles.add(articles);               //Object는 모든 타입을 받을 수 있음
+//        articles.add("asf");
+//        articles.add(1);
+//        articles.add(false);
+//        articles.add(120.44);
+        articles.add(new Article());
+        articles.add(new Article());
+        articles.add(new Article());
+        articles.add(new Article());
+        articles.add(new Article());
+        articles.add(new Article());
+
+        System.out.println(articles);  // toString() 호출 , List는 [o , o, o] 형태로 출력됨
+
+        for (int i =0 ; i < articles.size() ; i++ ) {   // size() --> ArrayList 타입의 배열의 크기를 가져옴
+            Article article =(Article) articles.get(i);  //강제 형변환,   get(i)는 return 타입이 Object(모든 class 부모)
+            System.out.println();
+        }
+    }
+    static void exam03() {
+        ArrayList<Article> articles = new ArrayList<>();  //제너릭 사용 --> 'E' Article 지정       articles.add(new Article());
+        articles.add(new Article());
+        articles.add(new Article());
+        articles.add(new Article());
+        articles.add(new Article());
+        articles.add(new Article());
+
+        for(Article article : articles) {   //향상된 for문도 잘 수행
+            System.out.println(article.id);
+        }
+
+//        for (int i =0 ; i < articles.size() ; i++ ) {
+//            Article article = articles.get(i);    // 강제형변환을 안해도 된다
+//            System.out.println(article.id);
+//        }
+
+    }
+
 }
 
 class Article {
-
-    // [1] static 변수 → 모든 Article 객체가 공유하는 ID 관리용
     static int lastId;
-
-    // [2] 인스턴스 변수 → 각 객체별로 고유 ID 저장
     int id;
 
-    // [3] static 초기화 블록 → 클래스 로딩 시 1번 실행
     static {
-        lastId = 0;   // [4] 초기 lastId 세팅
+        lastId = 0;
     }
 
-    // [8] 기본 생성자 호출되는 시점: new Article() 실행될 때마다
     Article() {
-        this(lastId + 1);  // [9] 다른 생성자 Article(int id) 호출, id 값 세팅
-        lastId++;          // [10] lastId 증가 → 다음 객체의 ID를 위해 준비
+        this(lastId + 1);
+        lastId++;
     }
 
-    // [9] Article(int id) 생성자
     Article(int id) {
-        this.id = id;      // [10] 인스턴스 id 값 저장
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                '}';
     }
 }
