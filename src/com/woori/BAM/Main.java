@@ -1,11 +1,11 @@
 package com.woori.BAM;
-
+import java.time.LocalDateTime; // 날짜 시간 사용을 위해서 임포트 
 import java.util.ArrayList;   // ArrayList 사용을 위해 임포트
 import java.util.List;        // List 인터페이스 임포트
 import java.util.Scanner;     // 키보드 입력받는 Scanner 임포트
 
 public class Main {
-    public static void main(String[] args) {
+    public static <번호를> void main(String[] args) {
         System.out.println("== 프로그램 시작 == ");
         Scanner scanner = new Scanner(System.in);   // 키보드 입력을 받는 scanner 객체 생성
         int id = 1;                                  // 글 번호(1부터 시작). 글 생성 때마다 증가
@@ -51,11 +51,44 @@ public class Main {
                 article.title = title;               // 제목 넣기
                 article.sub = sub;                   // 내용 넣기
 
+                LocalDateTime nowDate = LocalDateTime.now();  // 날짜 시간 데이터를 쓰기 위해 ?
+                article.nowDate = nowDate;              // 시간을 생성.
+
                 articles.add(article);               // 리스트에 글 추가
 
                 id = id + 1;                         // 다음 글 번호 증가
 
-            } else {
+//            } else if (c.equals("article detail 1")) {                      //  게시글 조회하기
+//                if (articles.size() == 0) {
+//                    System.out.println("1번 게시글이 존재하지 않습니다.");
+//                }else {
+//                    Article article = articles.get(0);
+//                    System.out.println("날짜 :"+article.nowDate);
+//                    System.out.println("제목 :"+article.title);
+//                    System.out.println("내용 :"+article.sub);
+//                }
+//
+//
+//            }else if (c.equals("article detail 2")) {
+//                if (articles.size() <= 1) {                                 //  2번 게시글을 조회하려면 인덱스가 2개이하
+//                    System.out.println("2번 게시글이 존재하지 않습니다.");
+//                }else {
+//                    Article article = articles.get(1);
+//                    System.out.println("날짜 :"+article.nowDate);
+//                    System.out.println("제목 :"+article.title);
+//                    System.out.println("내용 :"+article.sub);
+//                }
+
+
+            }else if  (c.startsWith("article detail")) {            //  아티클 디테일로 시작되는 문자열 일 경우
+                String[] cmdbits = c.split(" ");   // 괄호 안에 있는 구분자로 인해 문자열이 쪼개져서 배열로 들어감.
+
+
+
+
+
+
+            }else {
                 System.out.println("존재하지 않는 명령어 입니다.");
                 // 위의 명령어들과 일치하지 않으면 실행됨
             }
@@ -67,4 +100,5 @@ class Article {
     public Object id;     // 글 번호 (int로 해도 됨)
     public String title;  // 글 제목
     public String sub;    // 글 내용
+    public Object nowDate;
 }
