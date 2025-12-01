@@ -14,7 +14,8 @@ public class Main {
 
             if (s.equals("exit")) {                        // 와일 무한루프 탈출 기능 if문으로 넣음
                 System.out.println("== 프로그램 종료 ==");  // exit 입력하면 이 문구 출력되며
-                break;                                    // 루프 빠져나감
+                break;                                 // 루프 빠져나감
+                
             }
 
         }
