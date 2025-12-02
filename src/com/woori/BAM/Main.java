@@ -1,6 +1,7 @@
 package com.woori.BAM;
 
 import java.time.LocalDateTime; // 날짜 시간 사용을 위해서 임포트
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;   // ArrayList 사용을 위해 임포트
 import java.util.List;        // List 인터페이스 임포트
 import java.util.Scanner;     // 키보드 입력받는 Scanner 임포트
@@ -25,10 +26,10 @@ public class Main {
                 if (articles.size() == 0) {          // [10.1] 게시글 없으면 안내
                     System.out.println("게시글이 없습니다.");
                 } else {
-                    System.out.println("번호  |  제목");
+                    System.out.println("번호  |  제목   |  일시");
                     for (int i = articles.size() - 1; i >= 0; i--) { // [10.2] 리스트 크기만큼 반복 // 역순으로
                         Article article = articles.get(i);       // [10.3] i번째 글 가져오기
-                        System.out.println(article.id + "        " + article.title); // [10.4] 번호와 제목 출력
+                        System.out.println(article.id + "        " + article.title+ "     " + article.nowDate); // [10.4] 번호와 제목 출력
                     }
                 }
 
@@ -51,7 +52,9 @@ public class Main {
 //                article.sub = sub;                   // [12.7] 내용 할당
 
                 LocalDateTime nowDate = LocalDateTime.now();  // [12.8] 현재 날짜/시간 생성
-                article.nowDate = nowDate;              // [12.9] Article 객체에 날짜/시간 저장
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // 날짜 형식 변경
+                String formattedDateTime = nowDate.format(formatter);  // 변경할 날짜 일시 형식을 대입
+                article.nowDate = formattedDateTime;              // [12.9] Article 객체에 날짜/시간 저장
 
                 articles.add(article);               // [12.10] 리스트에 글 추가
 
@@ -83,10 +86,10 @@ public class Main {
                 }
 
                 // [13.9] 글 상세 정보 출력
-                System.out.println("번호 :" + foundArticle.id);
-                System.out.println("날짜 :" + foundArticle.nowDate);
-                System.out.println("제목 :" + foundArticle.title);
-                System.out.println("내용 :" + foundArticle.sub);
+                System.out.println("번호 : " + foundArticle.id);
+                System.out.println("날짜 : " + foundArticle.nowDate);
+                System.out.println("제목 : " + foundArticle.title);
+                System.out.println("내용 : " + foundArticle.sub);
 
             } else {
                 System.out.println("존재하지 않는 명령어 입니다."); // [14] 잘못된 명령어 처리
@@ -99,7 +102,7 @@ class Article {
     public int id;          // [15] 글 번호
     public String title;    // [16] 글 제목
     public String sub;      // [17] 글 내용
-    public Object nowDate;  // [18] 작성 날짜/시간
+    public String nowDate;  // [18] 작성 날짜/시간
 
     public Article(int id, String title, String sub) {
 
