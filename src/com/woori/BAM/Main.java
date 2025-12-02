@@ -6,7 +6,7 @@ import java.util.List;        // List 인터페이스 임포트
 import java.util.Scanner;     // 키보드 입력받는 Scanner 임포트
 
 public class Main {
-    public static  void main(String[] args) {
+    public static void main(String[] args) {
         System.out.println("== 프로그램 시작 == "); // [1] 프로그램 시작 메시지 출력
         Scanner scanner = new Scanner(System.in);   // [2] Scanner 객체 생성: 키보드 입력 받기
         int id = 1;                                  // [3] 글 번호 초기화 (1부터 시작)
@@ -15,7 +15,7 @@ public class Main {
         while (true) {                               // [5] 무한 루프 시작: 명령어 입력 계속 받기
             System.out.print("cmd) ");
             String cmd = scanner.nextLine().trim();    // [6] 명령어 입력, 공백 제거
-            System.out.println("명렁어) " + cmd);       // [7] 입력한 명령어 출력
+//            System.out.println("명렁어) " + cmd);       // [7] 입력한 명령어 출력
 
             if (cmd.equals("exit")) {                  // [8] exit 입력 시 프로그램 종료
                 System.out.println("== 프로그램 종료 ==");
@@ -26,7 +26,7 @@ public class Main {
                     System.out.println("게시글이 없습니다.");
                 } else {
                     System.out.println("번호  |  제목");
-                    for (int i = 0; i < articles.size(); i++) { // [10.2] 리스트 크기만큼 반복
+                    for (int i = articles.size()-1; i >= 0; i--) { // [10.2] 리스트 크기만큼 반복 // 역순으로
                         Article article = articles.get(i);       // [10.3] i번째 글 가져오기
                         System.out.println(article.id + "        " + article.title); // [10.4] 번호와 제목 출력
                     }
@@ -44,10 +44,11 @@ public class Main {
 
                 System.out.println(id + "번 글이 생성되었습니다."); // [12.3] 글 생성 안내
 
-                Article article = new Article();     // [12.4] Article 객체 생성
-                article.id = id;                     // [12.5] 글 번호 할당
-                article.title = title;               // [12.6] 제목 할당
-                article.sub = sub;                   // [12.7] 내용 할당
+//                Article article = new Article();     // [12.4] Article 객체 생성
+                Article article = new Article(id, title, sub);     // [12.4] Article 객체 생성
+//                article.id = id;                     // [12.5] 글 번호 할당
+//                article.title = title;               // [12.6] 제목 할당
+//                article.sub = sub;                   // [12.7] 내용 할당
 
                 LocalDateTime nowDate = LocalDateTime.now();  // [12.8] 현재 날짜/시간 생성
                 article.nowDate = nowDate;              // [12.9] Article 객체에 날짜/시간 저장
@@ -91,4 +92,11 @@ class Article {
     public String title;    // [16] 글 제목
     public String sub;      // [17] 글 내용
     public Object nowDate;  // [18] 작성 날짜/시간
+
+    public Article(int id, String title, String sub) {
+
+        this.id = id;                     // [12.5] 글 번호 할당
+        this.title = title;               // [12.6] 제목 할당
+        this.sub = sub;                   // [12.7] 내용 할당
+    }
 }
