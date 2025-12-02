@@ -1,5 +1,6 @@
 package com.woori.BAM;
 
+import java.sql.ClientInfoStatus;
 import java.time.LocalDateTime; // 날짜 시간 사용을 위해서 임포트
 import java.time.format.DateTimeFormatter;  //밀리초 단위까지 나와서 초 단위까지 포맷을 지정하기 위해 임포트
 import java.util.ArrayList;   // ArrayList 사용을 위해 임포트
@@ -11,7 +12,7 @@ public class Main {
         System.out.println("== 프로그램 시작 == "); // [1] 프로그램 시작 메시지 출력
         Scanner scanner = new Scanner(System.in);   // [2] Scanner 객체 생성: 키보드 입력 받기
         int id = 1;                                  // [3] 글 번호 초기화 (1부터 시작)
-//        int count = 1;                              // 조회수를 위한 카운트 변수
+//        int count = 1;                              // 조회수를 위한 카운트 변수는 주석처리, 아티클 클래스에 넣음
         List<Article> articles = new ArrayList<Article>();  // [4] 게시글을 담을 리스트 생성 배열 타입의 아티클스 라고 생각
 
         while (true) {                               // [5] 무한 루프 시작: 명령어 입력 계속 받기
@@ -60,6 +61,85 @@ public class Main {
                 articles.add(article);               // [12.10] 리스트에 글 추가
 
                 id = id + 1;                         // [12.11] 다음 글 번호 증가
+
+            } else if (cmd.startsWith("article modify")) {
+                String[] cmdbits = cmd.split(" ");
+                Article foundArticle = null;
+                int ids = 0;
+                try {
+                    ids = Integer.parseInt(cmdbits[2]);
+                } catch (NumberFormatException e) {
+                    System.out.println("올바른 숫자를 입력");
+                    continue;
+                } catch (Exception e) {
+                    System.out.println("올바른 숫자를 입력");
+                }
+
+                for (Article a : articles) {
+                    if (a.id == ids) {
+                        foundArticle = a;
+                        break;
+                    }
+                }
+
+                if (foundArticle == null) {
+                    System.out.println(ids + "번 게시글이 존재하지 않습니다");
+                    continue;
+                }
+
+                System.out.print("제목 : ");
+                foundArticle.title = scanner.nextLine();
+
+                System.out.print("내용 : ");
+                foundArticle.sub = scanner.nextLine();
+
+
+                System.out.println(ids + "번 게시글이 수정되었습니다.");
+
+
+            } else if (cmd.startsWith("article delete")) {
+                String[] cmdbits = cmd.split(" ");
+                Article foundArticle = null;
+                int ids = 0;
+                try {
+                    ids = Integer.parseInt(cmdbits[2]);
+                } catch (NumberFormatException e) {
+                    System.out.println("올바른 숫자를 입력");
+                    continue;
+                } catch (Exception e) {
+                    System.out.println("올바른 숫자를 입력");
+                }
+
+                for (Article a : articles) {
+                    if (a.id == ids) {
+                        foundArticle = a;
+                        break;
+                    }
+                }
+
+                if (foundArticle == null) {
+                    System.out.println(ids + "번 게시글이 존재하지 않습니다");
+                    continue;
+                }
+
+//
+//                foundArticle.title = null;
+//                foundArticle.sub = null;
+////                foundArticle.id = 0;
+//                foundArticle.nowDate = null;
+//                foundArticle.count = 0;
+
+                articles.remove(foundArticle);
+
+
+
+
+
+
+
+
+                System.out.println(ids + "번 게시글이 삭제되었습니다.");
+
 
             } else if (cmd.startsWith("article detail")) { // [13] article detail로 시작하는 명령어 처리
                 String[] cmdbits = cmd.split(" ");   // [13.1] 공백 기준으로 문자열 나누기
@@ -112,7 +192,7 @@ class Article {
     public String title;    // [16] 글 제목
     public String sub;      // [17] 글 내용
     public String nowDate;  // [18] 작성 날짜/시간
-    public int count ;
+    public int count;
 
 
     public Article() {
