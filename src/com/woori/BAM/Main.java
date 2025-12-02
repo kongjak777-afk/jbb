@@ -10,7 +10,7 @@ public class Main {
         System.out.println("== 프로그램 시작 == "); // [1] 프로그램 시작 메시지 출력
         Scanner scanner = new Scanner(System.in);   // [2] Scanner 객체 생성: 키보드 입력 받기
         int id = 1;                                  // [3] 글 번호 초기화 (1부터 시작)
-        List<Article> articles = new ArrayList<>();  // [4] 게시글을 담을 리스트 생성
+        List<Article> articles = new ArrayList<Article>();  // [4] 게시글을 담을 리스트 생성
 
         while (true) {                               // [5] 무한 루프 시작: 명령어 입력 계속 받기
             System.out.print("cmd) ");
@@ -26,7 +26,7 @@ public class Main {
                     System.out.println("게시글이 없습니다.");
                 } else {
                     System.out.println("번호  |  제목");
-                    for (int i = articles.size()-1; i >= 0; i--) { // [10.2] 리스트 크기만큼 반복 // 역순으로
+                    for (int i = articles.size() - 1; i >= 0; i--) { // [10.2] 리스트 크기만큼 반복 // 역순으로
                         Article article = articles.get(i);       // [10.3] i번째 글 가져오기
                         System.out.println(article.id + "        " + article.title); // [10.4] 번호와 제목 출력
                     }
@@ -60,7 +60,15 @@ public class Main {
             } else if (cmd.startsWith("article detail")) { // [13] article detail로 시작하는 명령어 처리
                 String[] cmdbits = cmd.split(" ");   // [13.1] 공백 기준으로 문자열 나누기
                 Article foundArticle = null;           // [13.2] 찾은 글 객체 초기화
-                int ids = Integer.parseInt(cmdbits[2]); // [13.3] 세 번째 요소를 정수로 변환 (조회할 글 번호)
+                int ids = 0;  // 트라이 문을 추가해서 지역변수화 된 ids 를 초기화.
+                try {
+                    ids = Integer.parseInt(cmdbits[2]); // [13.3] 세 번째 요소를 정수로 변환 (조회할 글 번호)
+                } catch (NumberFormatException e) {   //문자를 입력했을 때 나올 오류를 캐치해서 되돌림
+                    System.out.println("올바른 숫자를 입력");
+                    continue;
+                } catch (Exception e) {                 // 그 밖의 모든 예외를 처리
+                    System.out.println("올바른 숫자를 입력");
+                }
 
                 for (Article a : articles) {          // [13.4] 리스트에서 글 찾기
                     if (a.id == ids) {
