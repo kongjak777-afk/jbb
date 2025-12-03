@@ -6,8 +6,8 @@ import java.util.Scanner;
 
 public class Main {
 
-        static int lastArticleID = 1;
-        static List<Article> articles = new ArrayList<>();
+    static int lastArticleID = 1;
+    static List<Article> articles = new ArrayList<>();
 
     public static void main(String[] args) {
         System.out.println("== 프로그램 시작 ==");
@@ -15,9 +15,6 @@ public class Main {
 
 
         makeTestData();
-
-
-
 
 
         while (true) {
@@ -173,13 +170,28 @@ public class Main {
 
         System.out.println("== 프로그램 종료 ==");
     }
-    static void makeTestData () {
-        Article ar1 = new Article(lastArticleID++,"제목1","내용1",Util.getDateStr(),10);
-        articles.add(ar1);
-        Article ar2 = new Article(lastArticleID++,"제목2","내용2",Util.getDateStr(),20);
-        articles.add(ar2);
-        Article ar3 = new Article(lastArticleID++,"제목3","내용3",Util.getDateStr(),30);
-        articles.add(ar3);
+
+    static void makeTestData() {
+
+        for (int i = 1; i <= 500; i++) {
+            String 제목 = "제목" + i;                       //자동 형변환 됨
+            String 내용 = "내용" + i;
+            int 뷰카운트 = i;
+            int 라스트아이디 = lastArticleID++;
+            String 일시 = Util.getDateStr();
+
+//            articles.add(new Article(라스트아이디,제목,내용,일시,뷰카운트));   // 이렇게 해도 되고
+            Article article = new Article(라스트아이디,제목,내용,일시,뷰카운트);  // 이렇게 해도 됨
+            articles.add(article);                                           // 대신 아래 코드까지
+        }
+
+
+//        Article ar1 = new Article(lastArticleID++,"제목1","내용1",Util.getDateStr(),10);
+//        articles.add(ar1);
+//        Article ar2 = new Article(lastArticleID++,"제목2","내용2",Util.getDateStr(),20);
+//        articles.add(ar2);
+//        Article ar3 = new Article(lastArticleID++,"제목3","내용3",Util.getDateStr(),30);
+//        articles.add(ar3);
     }
 
     // static 중첩 클래스(Outer 클래스에서 바로 사용 가능하게)
@@ -190,7 +202,7 @@ public class Main {
         String regDate;
         int viewCnt;
 
-        Article() {}
+//        Article() {}
 
         Article(int id, String title, String body, String regDate, int viewCnt) {
             this.id = id;
