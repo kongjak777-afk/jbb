@@ -1,207 +1,207 @@
 package com.woori.BAM;
 
-import java.sql.ClientInfoStatus;
-import java.time.LocalDateTime; // 날짜 시간 사용을 위해서 임포트
-import java.time.format.DateTimeFormatter;  //밀리초 단위까지 나와서 초 단위까지 포맷을 지정하기 위해 임포트
-import java.util.ArrayList;   // ArrayList 사용을 위해 임포트
-import java.util.List;        // List 인터페이스 임포트
-import java.util.Scanner;     // 키보드 입력받는 Scanner 임포트
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Main {
+
+        static int lastArticleID = 1;
+        static List<Article> articles = new ArrayList<>();
+
     public static void main(String[] args) {
-        System.out.println("== 프로그램 시작 == "); // [1] 프로그램 시작 메시지 출력
-        Scanner scanner = new Scanner(System.in);   // [2] Scanner 객체 생성: 키보드 입력 받기
-        int id = 1;                                  // [3] 글 번호 초기화 (1부터 시작)
-//        int count = 1;                              // 조회수를 위한 카운트 변수는 주석처리, 아티클 클래스에 넣음
-        List<Article> articles = new ArrayList<Article>();  // [4] 게시글을 담을 리스트 생성 배열 타입의 아티클스 라고 생각
+        System.out.println("== 프로그램 시작 ==");
+        Scanner sc = new Scanner(System.in);
 
-        while (true) {                               // [5] 무한 루프 시작: 명령어 입력 계속 받기
-            System.out.print("cmd) ");
-            String cmd = scanner.nextLine().trim();    // [6] 명령어 입력, 공백 제거
-//            System.out.println("명렁어) " + cmd);       // [7] 입력한 명령어 출력
 
-            if (cmd.equals("exit")) {                  // [8] exit 입력 시 프로그램 종료
-                System.out.println("== 프로그램 종료 ==");
-                break;                               // [9] 반복문 탈출 → 프로그램 종료
+        makeTestData();
 
-            } else if (cmd.equals("article list")) {   // [10] 게시글 목록 보기 명령어
-                if (articles.size() == 0) {          // [10.1] 게시글 없으면 안내
-                    System.out.println("게시글이 없습니다.");
-                } else {
-                    System.out.println("번호  |  제목   |  일시          |     조회수");
-                    for (int i = articles.size() - 1; i >= 0; i--) { // [10.2] 리스트 크기만큼 반복 // 역순으로
-                        Article article = articles.get(i);       // [10.3] i번째 글 가져오기
-                        System.out.println(article.id + "        " + article.title + "     " + article.nowDate + "     " + article.count); // [10.4] 번호와 제목 출력
+
+
+
+
+        while (true) {
+            System.out.printf("cmd) ");
+            String cmd = sc.nextLine().trim();
+
+            if (cmd.length() == 0) {
+                System.out.println("명령어를 입력해 주세요");
+                continue;
+            }
+            if (cmd.equals("exit")) {
+                break;
+            }
+
+            if (cmd.equals("article list")) {
+                if (articles.size() == 0) {
+                    System.out.println("게시글이 없습니다");
+                    continue;
+                }
+                System.out.println("번호  |   제목   |  내용  |       regDate    |   조회수");
+                for (int i = articles.size() - 1; i >= 0; i--) {
+                    Article article = articles.get(i);
+                    System.out.printf("%d    |    %s   |  %s  |   %s  |  %d\n",
+                            article.id, article.title, article.body, article.regDate, article.viewCnt);
+                }
+
+            } else if (cmd.equals("article write")) {
+
+                System.out.print("제목 : ");
+                String title = sc.nextLine();
+                System.out.print("내용 : ");
+                String body = sc.nextLine();
+                System.out.println(lastArticleID + " 번글이 생성되었습니다");
+
+                Article article = new Article(lastArticleID, title, body, Util.getDateStr(), 0);
+                articles.add(article);
+
+                lastArticleID++;
+
+            } else if (cmd.startsWith("article detail")) {
+
+                String[] cmdBits = cmd.split(" ");
+                if (cmdBits.length < 3) {
+                    System.out.println("번호를 입력해 주세요");
+                    continue;
+                }
+
+                int id;
+                try {
+                    id = Integer.parseInt(cmdBits[2]);
+                } catch (Exception e) {
+                    System.out.println("정수를 입력하시길 바랍니다");
+                    continue;
+                }
+
+                Article foundArticle = null;
+                for (Article article : articles) {
+                    if (article.id == id) {
+                        foundArticle = article;
+                        break;
                     }
                 }
 
-            } else if (cmd.equals("")) {               // [11] 공백 입력 시 안내
-                System.out.println("명령어를 입력해주세요");
+                if (foundArticle == null) {
+                    System.out.printf("%d번 게시물이 존재하지 않습니다\n", id);
+                    continue;
+                }
 
-            } else if (cmd.equals("article write")) {  // [12] 글 작성 명령어
-                System.out.print("제목 : ");
-                String title = scanner.nextLine();   // [12.1] 제목 입력
+                foundArticle.increaseViewCnt();
 
-                System.out.print("내용 : ");
-                String sub = scanner.nextLine();     // [12.2] 내용 입력
-
-                System.out.println(id + "번 글이 생성되었습니다."); // [12.3] 글 생성 안내
-
-//                Article article = new Article();     // [12.4] Article 객체 생성
-                Article article = new Article(id, title, sub);     // [12.4] Article 객체 생성
-//                article.id = id;                     // [12.5] 글 번호 할당
-//                article.title = title;               // [12.6] 제목 할당
-//                article.sub = sub;                   // [12.7] 내용 할당
-
-                LocalDateTime nowDate = LocalDateTime.now();  // [12.8] 현재 날짜/시간 생성 / 클래스명 다음에바로 메소드가 나오니 스태틱메소드
-                DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // 날짜 형식 변경
-                String fDateTime = nowDate.format(f);  // 변경할 날짜 일시 형식을 대입
-                article.nowDate = fDateTime;              // [12.9] Article 객체에 날짜/시간 저장
-
-                articles.add(article);               // [12.10] 리스트에 글 추가
-
-                id = id + 1;                         // [12.11] 다음 글 번호 증가
+                System.out.println("번호 : " + foundArticle.id);
+                System.out.println("날짜 : " + foundArticle.regDate);
+                System.out.println("제목 : " + foundArticle.title);
+                System.out.println("내용 : " + foundArticle.body);
+                System.out.println("조회수 : " + foundArticle.viewCnt);
 
             } else if (cmd.startsWith("article modify")) {
-                String[] cmdbits = cmd.split(" ");
-                Article foundArticle = null;
-                int ids = 0;
-                try {
-                    ids = Integer.parseInt(cmdbits[2]);
-                } catch (NumberFormatException e) {
-                    System.out.println("올바른 숫자를 입력");
+
+                String[] cmdBits = cmd.split(" ");
+                if (cmdBits.length < 3) {
+                    System.out.println("번호를 입력해 주세요");
                     continue;
-                } catch (Exception e) {
-                    System.out.println("올바른 숫자를 입력");
                 }
 
-                for (Article a : articles) {
-                    if (a.id == ids) {
-                        foundArticle = a;
+                int id;
+                try {
+                    id = Integer.parseInt(cmdBits[2]);
+                } catch (Exception e) {
+                    System.out.println("정수를 입력하시길 바랍니다");
+                    continue;
+                }
+
+                Article foundArticle = null;
+                for (Article article : articles) {
+                    if (article.id == id) {
+                        foundArticle = article;
                         break;
                     }
                 }
 
                 if (foundArticle == null) {
-                    System.out.println(ids + "번 게시글이 존재하지 않습니다");
+                    System.out.printf("%d번 게시물이 존재하지 않습니다\n", id);
                     continue;
                 }
 
-                System.out.print("제목 : ");
-                foundArticle.title = scanner.nextLine();
+                System.out.print("수정할 제목 : ");
+                String title = sc.nextLine().trim();
+                System.out.print("수정할 내용 : ");
+                String body = sc.nextLine().trim();
 
-                System.out.print("내용 : ");
-                foundArticle.sub = scanner.nextLine();
+                foundArticle.title = title;
+                foundArticle.body = body;
 
-
-                System.out.println(ids + "번 게시글이 수정되었습니다.");
-
+                System.out.println(id + "번 게시물이 수정되었습니다");
 
             } else if (cmd.startsWith("article delete")) {
-                String[] cmdbits = cmd.split(" ");
-                Article foundArticle = null;
-                int ids = 0;
-                try {
-                    ids = Integer.parseInt(cmdbits[2]);
-                } catch (NumberFormatException e) {
-                    System.out.println("올바른 숫자를 입력");
+
+                String[] cmdBits = cmd.split(" ");
+                if (cmdBits.length < 3) {
+                    System.out.println("번호를 입력해 주세요");
                     continue;
-                } catch (Exception e) {
-                    System.out.println("올바른 숫자를 입력");
                 }
 
-                for (Article a : articles) {
-                    if (a.id == ids) {
-                        foundArticle = a;
+                int id;
+                try {
+                    id = Integer.parseInt(cmdBits[2]);
+                } catch (Exception e) {
+                    System.out.println("정수를 입력하시길 바랍니다");
+                    continue;
+                }
+
+                Article foundArticle = null;
+                for (Article article : articles) {
+                    if (article.id == id) {
+                        foundArticle = article;
                         break;
                     }
                 }
 
                 if (foundArticle == null) {
-                    System.out.println(ids + "번 게시글이 존재하지 않습니다");
+                    System.out.printf("%d번 게시물이 존재하지 않습니다\n", id);
                     continue;
                 }
-
-//
-//                foundArticle.title = null;
-//                foundArticle.sub = null;
-////                foundArticle.id = 0;
-//                foundArticle.nowDate = null;
-//                foundArticle.count = 0;
 
                 articles.remove(foundArticle);
 
-
-
-
-
-
-
-
-                System.out.println(ids + "번 게시글이 삭제되었습니다.");
-
-
-            } else if (cmd.startsWith("article detail")) { // [13] article detail로 시작하는 명령어 처리
-                String[] cmdbits = cmd.split(" ");   // [13.1] 공백 기준으로 문자열 나누기
-                Article foundArticle = null;           // [13.2] 찾은 글 객체 초기화
-                int ids = 0;  // 트라이 문을 추가해서 지역변수화 된 ids 를 초기화.
-                try {
-                    ids = Integer.parseInt(cmdbits[2]); // [13.3] 세 번째 요소를 정수로 변환 (조회할 글 번호)
-                } catch (NumberFormatException e) {   //문자를 입력했을 때 나올 오류를 캐치해서 되돌림
-                    System.out.println("올바른 숫자를 입력");
-                    continue;
-                } catch (Exception e) {                 // 그 밖의 모든 예외를 처리
-                    System.out.println("올바른 숫자를 입력");
-                }
-
-                for (Article a : articles) {          // [13.4] 리스트에서 글 찾기
-                    if (a.id == ids) {
-                        foundArticle = a;           // [13.5] 글 찾으면 저장
-                        break;                     // [13.6] for문 종료
-                    }
-                }
-
-                if (foundArticle == null) {           // [13.7] 글이 없으면 안내
-                    System.out.println(ids + "번 게시글이 존재하지 않습니다");
-                    continue; // [13.8] while 루프 처음으로 돌아감
-                }
-
-
-                // [13.9] 글 상세 정보 출력
-
-
-                System.out.println("번호 : " + foundArticle.id);
-                System.out.println("날짜 : " + foundArticle.nowDate);
-                System.out.println("제목 : " + foundArticle.title);
-                System.out.println("내용 : " + foundArticle.sub);
-
-
-                foundArticle.count = foundArticle.count + 1;  // 카운트를 여기다 해야 조회수가 각 게시글마다 따로 늘어남
-
-                System.out.println("조회수 : " + foundArticle.count);
+                System.out.println(id + "번 게시물이 삭제되었습니다");
 
             } else {
-                System.out.println("존재하지 않는 명령어 입니다."); // [14] 잘못된 명령어 처리
+                System.out.println("존재하지 않는 명령어 입니다");
             }
         }
+
+        System.out.println("== 프로그램 종료 ==");
     }
-}
-
-class Article {
-    public int id;          // [15] 글 번호
-    public String title;    // [16] 글 제목
-    public String sub;      // [17] 글 내용
-    public String nowDate;  // [18] 작성 날짜/시간
-    public int count;
-
-
-    public Article() {
+    static void makeTestData () {
+        Article ar1 = new Article(lastArticleID++,"제목1","내용1",Util.getDateStr(),10);
+        articles.add(ar1);
+        Article ar2 = new Article(lastArticleID++,"제목2","내용2",Util.getDateStr(),20);
+        articles.add(ar2);
+        Article ar3 = new Article(lastArticleID++,"제목3","내용3",Util.getDateStr(),30);
+        articles.add(ar3);
     }
 
-    public Article(int id, String title, String sub) {
+    // static 중첩 클래스(Outer 클래스에서 바로 사용 가능하게)
+    static class Article {
+        int id;
+        String title;
+        String body;
+        String regDate;
+        int viewCnt;
 
-        this.id = id;                     // [12.5] 글 번호 할당
-        this.title = title;               // [12.6] 제목 할당
-        this.sub = sub;                   // [12.7] 내용 할당
+        Article() {}
+
+        Article(int id, String title, String body, String regDate, int viewCnt) {
+            this.id = id;
+            this.title = title;
+            this.body = body;
+            this.regDate = regDate;
+            this.viewCnt = viewCnt;
+        }
+
+        void increaseViewCnt() {
+            this.viewCnt++;
+        }
     }
 }
