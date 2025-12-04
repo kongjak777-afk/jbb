@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 public class App {
 
-    int lastarticleid;
-    List<Article> articles;
+    private int lastarticleid;
+    private List<Article> articles;
 
     App() {
         lastarticleid = 1;
