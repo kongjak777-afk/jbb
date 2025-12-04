@@ -12,8 +12,8 @@ public class App {
     int lastarticleid;
     List<Article> articles;
 
-    App(){
-        lastarticleid = 1 ;
+    App() {
+        lastarticleid = 1;
         articles = new ArrayList<>();
 
     }
@@ -21,8 +21,6 @@ public class App {
     void run() {
         System.out.println("== 프로그램 시작 ==");
         Scanner sc = new Scanner(System.in);
-
-
 
 
         makeTestData();
@@ -39,20 +37,7 @@ public class App {
             if (cmd.equals("exit")) {
                 break;
             }
-
-            if (cmd.equals("article list")) {
-                if (articles.size() == 0) {
-                    System.out.println("게시글이 없습니다");
-                    continue;
-                }
-                System.out.println("번호  |   제목   |  내용  |       regDate    |   조회수");
-                for (int i = articles.size() - 1; i >= 0; i--) {
-                    Article article = articles.get(i);
-                    System.out.printf("%d    |    %s   |  %s  |   %s  |  %d\n",
-                            article.getId(), article.getTitle(), article.getBody(), article.getRegDate(), article.getViewCnt());
-                }
-
-            } else if (cmd.equals("article write")) {
+            if (cmd.equals("article write")) {
 
                 System.out.print("제목 : ");
                 String title = sc.nextLine();
@@ -65,29 +50,28 @@ public class App {
 
                 lastarticleid++;
 
+            } else if (cmd.equals("article list")) {
+                if (articles.size() == 0) {
+                    System.out.println("게시글이 없습니다");
+                    continue;
+                }
+                System.out.println("번호  |   제목   |         regDate    |   조회수");
+                for (int i = articles.size() - 1; i >= 0; i--) {
+                    Article article = articles.get(i);
+                    System.out.printf("%d    |    %s    |   %s  |  %d\n",
+                            article.getId(), article.getTitle(), article.getRegDate(), article.getViewCnt());
+                }
+
             } else if (cmd.startsWith("article detail")) {
 
-                String[] cmdBits = cmd.split(" ");
-                if (cmdBits.length < 3) {
-                    System.out.println("번호를 입력해 주세요");
+                int id = getCmdId(cmd);
+
+                if (id == 0) {
                     continue;
                 }
 
-                int id;
-                try {
-                    id = Integer.parseInt(cmdBits[2]);
-                } catch (Exception e) {
-                    System.out.println("정수를 입력하시길 바랍니다");
-                    continue;
-                }
+                Article foundArticle = getArticleById(id);
 
-                Article foundArticle = null;
-                for (Article article : articles) {
-                    if (article.getId() == id) {
-                        foundArticle = article;
-                        break;
-                    }
-                }
 
                 if (foundArticle == null) {
                     System.out.printf("%d번 게시물이 존재하지 않습니다\n", id);
@@ -104,28 +88,13 @@ public class App {
 
             } else if (cmd.startsWith("article modify")) {
 
-                String[] cmdBits = cmd.split(" ");
-                if (cmdBits.length < 3) {
-                    System.out.println("번호를 입력해 주세요");
+                int id = getCmdId(cmd);
+
+                if (id == 0) {
                     continue;
                 }
 
-                int id;
-                try {
-                    id = Integer.parseInt(cmdBits[2]);
-                } catch (Exception e) {
-                    System.out.println("정수를 입력하시길 바랍니다");
-                    continue;
-                }
-
-                Article foundArticle = null;
-                for (Article article : articles) {
-                    if (article.getId() == id) {
-                        foundArticle = article;
-                        break;
-                    }
-                }
-
+                Article foundArticle = getArticleById(id);
                 if (foundArticle == null) {
                     System.out.printf("%d번 게시물이 존재하지 않습니다\n", id);
                     continue;
@@ -143,27 +112,13 @@ public class App {
 
             } else if (cmd.startsWith("article delete")) {
 
-                String[] cmdBits = cmd.split(" ");
-                if (cmdBits.length < 3) {
-                    System.out.println("번호를 입력해 주세요");
+                int id = getCmdId(cmd);
+
+                if (id == 0) {
                     continue;
                 }
 
-                int id;
-                try {
-                    id = Integer.parseInt(cmdBits[2]);
-                } catch (Exception e) {
-                    System.out.println("정수를 입력하시길 바랍니다");
-                    continue;
-                }
-
-                Article foundArticle = null;
-                for (Article article : articles) {
-                    if (article.getId() == id) {
-                        foundArticle = article;
-                        break;
-                    }
-                }
+                Article foundArticle = getArticleById(id);
 
                 if (foundArticle == null) {
                     System.out.printf("%d번 게시물이 존재하지 않습니다\n", id);
@@ -180,6 +135,35 @@ public class App {
         }
 
         System.out.println("== 프로그램 종료 ==");
+    }
+
+    private Article getArticleById(int id) {
+        for (Article article : articles) {
+            if (article.getId() == id) {
+                return article;
+
+            }
+        }
+        return null;
+    }
+
+    private int getCmdId(String cmd) {
+        String[] cmdBits = cmd.split(" ");
+        Article foundArticle = null;
+        if (cmdBits.length < 3) {
+            System.out.println("번호를 입력해 주세요");
+        }
+
+        int id;
+        try {
+            id = Integer.parseInt(cmdBits[2]);
+            return id;
+        } catch (Exception e) {
+            System.out.println("정수를 입력하시길 바랍니다");
+            return 0;
+
+        }
+
     }
 
     void makeTestData() {
